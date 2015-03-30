@@ -64,6 +64,13 @@ img {
 </div>
 
 
+<pre><code>## Warning: package 'psych' was built under R version 3.1.3</code></pre>
+<pre><code>## Warning: package 'psy' was built under R version 3.1.3</code></pre>
+<pre><code>## Warning: package 'CTT' was built under R version 3.1.3</code></pre>
+<pre><code>## Warning: package 'sem' was built under R version 3.1.3</code></pre>
+<pre><code>## Warning: package 'GPArotation' was built under R version 3.1.3</code></pre>
+<pre><code>## Warning: package 'MBESS' was built under R version 3.1.3</code></pre>
+<pre><code>## Warning: package 'lavaan' was built under R version 3.1.3</code></pre>
 <p>The first order of business is the reading in and formatting of the data. Subject Responses were divided into separate tables according to scale. Then, to correct for missing and nonsensical responses, I deleted all subjects for whom I did not have a complete survey. This would likely have dramatically reduced the size of the data set had performed listwise deletion across all scales as a whole. However, as the subject of interest is the reliability of each individual scale, performing listwise deletion within individual scales seemed a reasonable way clean up the dataset while removing as little data as possible. The first few rows, and total sample size, of each scale is shown below:</p>
 <pre><code>## [1] &quot;Depression Scale&quot;</code></pre>
 <pre><code>##   DS1 DS2 DS3 DS4 DS5 DS6 DS7 DS8 DS9 DS10 DS11 DS12 DS13 DS14 Sex Age
@@ -249,9 +256,9 @@ print(c(cacBARhand, cacBAR$alpha))</code></pre>
 <p>Across all scales, the predicted reliability exceeded the alpha coefficient. The alpha coefficient is based on the true score equivalence model, such that the covariances between all pairs of items are equal. The fact that the alpha coefficeints are so much lower than the reliability predicted by the Spearman-Brown formula suggets a violation of the equivalence of the item covariances. While an alpha coefficient is not exactly a metric of whether there is a single factor involed, a lack of internal consistency can be a symptom of multiple factors underlying the items, such that items do not load equally on the multiple factors.</p>
 <p>The differences between obsered and prophesied reliability in this case suggets that some items with each of these scales do not increase the reliability the way they would if they had similar factor loadings.</p>
 <p>DS: Split-half reliability and predicted reliability</p>
-<pre><code>## [1] 0.8654402</code></pre>
+<pre><code>## [1] 0.8655242</code></pre>
 <pre><code>## $r.new
-## [1] 0.927867</code></pre>
+## [1] 0.9279153</code></pre>
 <p>LS: Split-half reliability and predicted reliability</p>
 <pre><code>## Warning in cor.smooth(R): Matrix was not positive definite, smoothing was
 ## done</code></pre>
@@ -435,6 +442,7 @@ print(c(cacBARhand, cacBAR$alpha))</code></pre>
 <pre><code>##          [,1]      [,2]      [,3]
 ## [1,] 0.733404 0.7095956 0.7572124</code></pre>
 <p>Question 7:</p>
+<pre><code>All of the scales contain </code></pre>
 
 
 </div>

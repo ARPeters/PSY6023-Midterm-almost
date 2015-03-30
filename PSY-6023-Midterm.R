@@ -3,14 +3,13 @@ library(foreign)
 library(psych)
 library(psy)
 library(stats)
-library(psych)
 library(CTT)
 library(sem)
 library(GPArotation)
 library(MBESS)
 library(lavaan)
 library(epicalc)
-install.packages("epicalc")
+
 # Reading in and prepping data
 ds<-read.csv("Midterm.csv")
 
@@ -110,7 +109,6 @@ cacGAR$alpha
 cacBAR<-cronbach(BAR[,1:6])
 cacBAR$alpha
 
-?round()
 #Question 2: Calculate cronbach's alpha by hand
 #Scale 1: DS
 covDS<-cov(DS[,1:14])
@@ -266,8 +264,6 @@ DSNewhalf<-splitHalf(DSNew)
 DSNewhalf<-DSNewhalf$meanr
 spearman.brown(r.xx=as.numeric(DSNewhalf), input=2, "n")
 
-
-?alphaBest()
 alphaBestDS<-alpha(vars=c(DS1, DS2, DS3, DS4, DS5, DS6, DS7, DS8, DS9, DS10, DS11, DS12, DS13, DS14), dataFrame=DS)
 alphaBestDS$alpha.if.removed
 
@@ -281,3 +277,4 @@ LSNewhalf<-LSNewhalf$meanr
 spearman.brown(r.xx=as.numeric(LSNewhalf), input=2, "n")
 
 alphaLSNew<-alpha(vars=c(LS1, LS2, LS3, LS4, LS5, LS6, LS8, LS9, LS10), dataFrame=LSNew)
+
