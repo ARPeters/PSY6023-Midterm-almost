@@ -64,13 +64,6 @@ img {
 </div>
 
 
-<pre><code>## Warning: package 'psych' was built under R version 3.1.3</code></pre>
-<pre><code>## Warning: package 'psy' was built under R version 3.1.3</code></pre>
-<pre><code>## Warning: package 'CTT' was built under R version 3.1.3</code></pre>
-<pre><code>## Warning: package 'sem' was built under R version 3.1.3</code></pre>
-<pre><code>## Warning: package 'GPArotation' was built under R version 3.1.3</code></pre>
-<pre><code>## Warning: package 'MBESS' was built under R version 3.1.3</code></pre>
-<pre><code>## Warning: package 'lavaan' was built under R version 3.1.3</code></pre>
 <p>The first order of business is the reading in and formatting of the data. Subject Responses were divided into separate tables according to scale. Then, to correct for missing and nonsensical responses, I deleted all subjects for whom I did not have a complete survey. This would likely have dramatically reduced the size of the data set had performed listwise deletion across all scales as a whole. However, as the subject of interest is the reliability of each individual scale, performing listwise deletion within individual scales seemed a reasonable way clean up the dataset while removing as little data as possible. The first few rows, and total sample size, of each scale is shown below:</p>
 <pre><code>## [1] &quot;Depression Scale&quot;</code></pre>
 <pre><code>##   DS1 DS2 DS3 DS4 DS5 DS6 DS7 DS8 DS9 DS10 DS11 DS12 DS13 DS14 Sex Age
@@ -122,12 +115,17 @@ img {
 ## 8    3    3    2    3    3    3   1  59</code></pre>
 <pre><code>## [1] &quot;BAR: Sample size&quot;</code></pre>
 <pre><code>## [1] 1115</code></pre>
-<p>Question 1: Use computer sofware to caculate Cronbach’s alpha for each of the five scales.</p>
+<div id="question-1" class="section level3">
+<h3>Question 1</h3>
+<p>Use computer sofware to caculate Cronbach’s alpha for each of the five scales.</p>
 <p>DS: Cronbach’s Alpha</p>
 <pre><code>##           [,1]   [,2]   [,3]   [,4]   [,5]  
 ## cacList   &quot;DS&quot;   &quot;LS&quot;   &quot;RR&quot;   &quot;GAR&quot;  &quot;BAR&quot; 
 ## cacAlphas &quot;0.87&quot; &quot;0.75&quot; &quot;0.47&quot; &quot;0.76&quot; &quot;0.76&quot;</code></pre>
-<p>Question 2: Calculate the variance-covariance matricies for each of the five scales. Then calculate the Cronbach’s Alpha using the classical definition of the alpha (by hand or with hand calculator).</p>
+</div>
+<div id="question-2" class="section level3">
+<h3>Question 2</h3>
+<p>Calculate the variance-covariance matricies for each of the five scales. Then calculate the Cronbach’s Alpha using the classical definition of the alpha (by hand or with hand calculator).</p>
 <p>DS:Variance-Covariance Matrix</p>
 <pre><code>##        DS1   DS2   DS3   DS4   DS5   DS6   DS7   DS8   DS9  DS10  DS11
 ## DS1  0.317 0.208 0.176 0.206 0.152 0.088 0.180 0.188 0.059 0.160 0.119
@@ -251,14 +249,20 @@ sumVarBARitems&lt;-sum(.861, 1.003, 1.059, 1.329, 1.181, 1.338)
 cacBARhand&lt;-(6/5)*(1-(sumVarBARitems/as.numeric(var(BAR$BARC))))
 print(c(cacBARhand, cacBAR$alpha))</code></pre>
 <pre><code>## [1] 0.7564687 0.7564230</code></pre>
-<p>Question 3: Are the alpha values identical between #1 and #2? Above, I have printed out the alpha coefficients that I calculated piece-by-piece, alongside those returned by r, to demonstrate their similarity. The two estimates tend to diverge around the fourth decimal place, which I am comfortable calling rounding error.</p>
-<p>Question 4: Calculate split-half reliability analyses for each of the five scales. Appy the Spearman-Brown prophecy formula to estimate internal consistency of the scale. Did the split-half reliability estimate yield the same value as alpha? Why?</p>
+</div>
+<div id="question-3" class="section level3">
+<h3>Question 3</h3>
+<p>Are the alpha values identical between #1 and #2? Above, I have printed out the alpha coefficients that I calculated piece-by-piece, alongside those returned by r, to demonstrate their similarity. The two estimates tend to diverge around the fourth decimal place, which I am comfortable calling rounding error.</p>
+</div>
+<div id="question-4" class="section level3">
+<h3>Question 4</h3>
+<p>Calculate split-half reliability analyses for each of the five scales. Appy the Spearman-Brown prophecy formula to estimate internal consistency of the scale. Did the split-half reliability estimate yield the same value as alpha? Why?</p>
 <p>Across all scales, the predicted reliability exceeded the alpha coefficient. The alpha coefficient is based on the true score equivalence model, such that the covariances between all pairs of items are equal. The fact that the alpha coefficeints are so much lower than the reliability predicted by the Spearman-Brown formula suggets a violation of the equivalence of the item covariances. While an alpha coefficient is not exactly a metric of whether there is a single factor involed, a lack of internal consistency can be a symptom of multiple factors underlying the items, such that items do not load equally on the multiple factors.</p>
 <p>The differences between obsered and prophesied reliability in this case suggets that some items with each of these scales do not increase the reliability the way they would if they had similar factor loadings.</p>
 <p>DS: Split-half reliability and predicted reliability</p>
-<pre><code>## [1] 0.8655242</code></pre>
+<pre><code>## [1] 0.8652796</code></pre>
 <pre><code>## $r.new
-## [1] 0.9279153</code></pre>
+## [1] 0.9277747</code></pre>
 <p>LS: Split-half reliability and predicted reliability</p>
 <pre><code>## Warning in cor.smooth(R): Matrix was not positive definite, smoothing was
 ## done</code></pre>
@@ -281,7 +285,10 @@ print(c(cacBARhand, cacBAR$alpha))</code></pre>
 <pre><code>## [1] 0.73575</code></pre>
 <pre><code>## $r.new
 ## [1] 0.8477603</code></pre>
-<p>Question 5: Using the single factor model, conduct the tests of homogeneity for each scale. Interpret the results. Test whether the items are essentially tau-equivalent for each of the five scales. Also, test whether the items are parallel for each of the five scales.</p>
+</div>
+<div id="question-5" class="section level3">
+<h3>Question 5</h3>
+<p>Using the single factor model, conduct the tests of homogeneity for each scale. Interpret the results. Test whether the items are essentially tau-equivalent for each of the five scales. Also, test whether the items are parallel for each of the five scales.</p>
 <p>Across every scale, a test statistic of homeogeneity reaches extremely small p-values. This gives further support to our suspicion fom question 4 that we must reject the hypothsis of single factor homogeneity.</p>
 <p>In each case, we also have evidence against parallel items. For all five scales, we observe factor loadings that are not equal; indeed, they are not even similar enough to maintain the null hypothesis of a single factor.</p>
 <p>Moreover, they are not even essentially tau-equivalent. The covariances are highly disparate, such that we do not have reason to make the assumption of equal inter-item covariances necessary for a single-factor model.</p>
@@ -425,7 +432,10 @@ print(c(cacBARhand, cacBAR$alpha))</code></pre>
 ## Test of the hypothesis that 1 factor is sufficient.
 ## The chi square statistic is 649.79 on 9 degrees of freedom.
 ## The p-value is 4.26e-134</code></pre>
-<p>Question 6: Calculate McDonald’s omega for each of the five scales. Also calculate 95% CI for the omega estimates.</p>
+</div>
+<div id="question-6" class="section level3">
+<h3>Question 6</h3>
+<p>Calculate McDonald’s omega for each of the five scales. Also calculate 95% CI for the omega estimates.</p>
 <p>DS: Omega, lower estimate, upper estimate</p>
 <pre><code>##           [,1]      [,2]      [,3]
 ## [1,] 0.8764954 0.8674059 0.8855849</code></pre>
@@ -441,8 +451,83 @@ print(c(cacBARhand, cacBAR$alpha))</code></pre>
 <p>BAR: Omega, lower estimate, upper estimate</p>
 <pre><code>##          [,1]      [,2]      [,3]
 ## [1,] 0.733404 0.7095956 0.7572124</code></pre>
-<p>Question 7:</p>
-<pre><code>All of the scales contain </code></pre>
+</div>
+<div id="question-7" class="section level3">
+<h3>Question 7:</h3>
+<p>If the intent is to make the scales shorter, while still maintaining a reliability of 0.7 or greater, every scale is a candidate for shortening except for the Reason-Retired Scale.</p>
+<p>The following table shows the overall alpha if an item was removed, and the correlation of each item with the rest of the items. We can see that the Depression Scale has a high reliability to start with. Items 6, 9, 11, and 14, have the highest “alpha-if-removed” values, and the lowest correlations with the other items. If we were to remove the items 6, 9, 11, and 14, the Depression scale would be still have an alpha of 0.85. And since alpha tends to be the lower-bound of the reliability, this suggests that it is safe to remove these four variables. Since the alpha chronically underestimates reliability and is based on assumptions that we’ve come to question, I have also calculated the Omega for this reduced DS scale, to corroborate it’s reliability.</p>
+<pre><code>##          Alpha Std.Alpha r(item, rest)
+## DS1  0.8582739 0.8617009     0.6497623
+## DS2  0.8629509 0.8680766     0.5351738
+## DS3  0.8634248 0.8694879     0.5278446
+## DS4  0.8590492 0.8656037     0.5981959
+## DS5  0.8636581 0.8672555     0.5308026
+## DS6  0.8692088 0.8739090     0.3917969
+## DS7  0.8606834 0.8669482     0.5697856
+## DS8  0.8613841 0.8646589     0.5831550
+## DS9  0.8708476 0.8763020     0.3465825
+## DS10 0.8579796 0.8642903     0.6217814
+## DS11 0.8671375 0.8729171     0.4382677
+## DS12 0.8585199 0.8655406     0.6191306
+## DS13 0.8583902 0.8657281     0.6127084
+## DS14 0.8655491 0.8704310     0.5231829</code></pre>
+<pre><code>## [1] &quot;Alpha of DS without items 6, 9, 11, and 14&quot;
+## [2] &quot;0.858989180018521&quot;</code></pre>
+<pre><code>## [1] &quot;Omega of DS without items 6, 9, 11, and 14&quot;
+## [2] &quot;0.860061190262454&quot;</code></pre>
+<p>The life satisfaction scale is of fairly low reliability to start off with, but as seen in the table below, has a few items that have very low correlations with other items, and the overall alpha will remain largely unchanged. By getting rid of items 2,6, and 7, we can increase leave the alpha and omega relatively unchanged. This will give more leeway if more items need to be removed later.</p>
+<pre><code>##          Alpha Std.Alpha r(item, rest)
+## LS1  0.7115582 0.7022065  0.4944441721
+## LS2  0.7300572 0.7179101  0.3799854852
+## LS3  0.7208378 0.7084366  0.4531557697
+## LS4  0.7098220 0.7002975  0.5062437032
+## LS5  0.7176702 0.7015089  0.4737028803
+## LS6  0.7573449 0.7510676  0.1288052750
+## LS7  0.7634491 0.7699413 -0.0008667375
+## LS8  0.7176608 0.7013945  0.4718613221
+## LS9  0.7126708 0.6967091  0.4982636160
+## LS10 0.6954993 0.6756697  0.6391723552</code></pre>
+<pre><code>## [1] &quot;Alpha of LS without items 2, 6, and 7:&quot;
+## [2] &quot;0.750868729400609&quot;</code></pre>
+<pre><code>## [1] &quot;Omega of LS without items 2, 6, and 7&quot;
+## [2] &quot;0.762836045458964&quot;</code></pre>
+<p>The Good-About-Retirement Scale has an alpha that is not too far from our stated minimum of 0.7. Removing the items with the two lowest correlations with the other variables will still leave us with an acceptable alpha and omega.</p>
+<pre><code>##          Alpha Std.Alpha r(item, rest)
+## GAR1 0.7263151 0.7309288     0.5273695
+## GAR2 0.7367368 0.7406737     0.4715202
+## GAR3 0.7241661 0.7265417     0.5471647
+## GAR4 0.7313850 0.7329482     0.5143298
+## GAR5 0.7456077 0.7477378     0.4238038
+## GAR6 0.7299757 0.7349496     0.5069673
+## GAR7 0.7566679 0.7615419     0.3534827
+## GAR8 0.7543912 0.7572242     0.3720991</code></pre>
+<pre><code>## [1] &quot;Alpha of GAR without items 7, and 8:&quot;
+## [2] &quot;0.750868729400609&quot;</code></pre>
+<pre><code>## [1] &quot;Omega of GAR without items 7 and 8:&quot;
+## [2] &quot;0.75480276082813&quot;</code></pre>
+<p>The Bad-About-Retirement scale has an alpha around our stated cut off. There is only a single item that would not drop the alpha to our minimum acceptable value. As it has the lowest correlation with the other items, it is probably safe to cut item 3, and this would still leave us with an acceptable alpha and omega.</p>
+<pre><code>##          Alpha Std.Alpha r(item, rest)
+## BAR1 0.7193580 0.7172233     0.5104952
+## BAR2 0.6968923 0.6934242     0.5917142
+## BAR3 0.7643453 0.7670257     0.3239932
+## BAR4 0.7233885 0.7258272     0.4912684
+## BAR5 0.7027391 0.7112352     0.5624658
+## BAR6 0.7150959 0.7207193     0.5196165</code></pre>
+<pre><code>## [1] &quot;Alpha of BAR without item 3:&quot; &quot;0.764345348699551&quot;</code></pre>
+<pre><code>## [1] &quot;Omega of BAR without item 3:&quot; &quot;0.728953974942262&quot;</code></pre>
+<p>The Reason-Retired scale is the only scale for which we should add items, because every single item on this scale demonstrates extremely poor correlation with the other items, and the overall alpha falls below our minimum. Here, I would recommend removing every item and starting over.</p>
+<pre><code>##          Alpha Std.Alpha r(item, rest)
+## RR1  0.5701900 0.5960531   -0.10035787
+## RR2  0.4360502 0.5346031    0.19784398
+## RR3  0.4959499 0.5623441    0.07163347
+## RR4  0.3781334 0.4719101    0.37990307
+## RR5  0.3852571 0.4624444    0.38934244
+## RR6  0.4310774 0.5286220    0.20965560
+## RR7  0.4489600 0.5333866    0.16167198
+## RR8  0.3778943 0.4595443    0.40025045
+## RR9  0.4389260 0.5356718    0.18789363
+## RR10 0.4035203 0.4822158    0.31741361</code></pre>
+</div>
 
 
 </div>

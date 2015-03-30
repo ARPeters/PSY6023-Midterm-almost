@@ -257,8 +257,11 @@ DShalf<-DShalf$meanr
 spearman.brown(r.xx=as.numeric(DShalf), input=0.7, "r")
 .36*14
 
-DSNew<-DS[,c(1:8, 10:14)]
+DSNew<-DS[,-c(6, 9, 11, 14, 15,16,17)]
 cacDSNew<-cronbach(DSNew)
+cacDSNew
+cacDS
+head(DSNew)
 
 DSNewhalf<-splitHalf(DSNew)
 DSNewhalf<-DSNewhalf$meanr
@@ -271,10 +274,44 @@ alphaBestLS<-alpha(vars=c(LS1, LS2, LS3, LS4, LS5, LS6, LS7, LS8, LS9, LS10), da
 alphaBestLS$alpha.if.removed
 alphaBestLS$alpha
 
-LSNew<-LS[,c(1:6, 8:10)]
+LSNew<-LS[,c(1, 3:5, 8:10)]
+cacLSNew<-cronbach(LSNew)
+cacLSNew
+cacLS
+
+
 LSNewhalf<-splitHalf(LSNew)
 LSNewhalf<-LSNewhalf$meanr
 spearman.brown(r.xx=as.numeric(LSNewhalf), input=2, "n")
 
-alphaLSNew<-alpha(vars=c(LS1, LS2, LS3, LS4, LS5, LS6, LS8, LS9, LS10), dataFrame=LSNew)
+alphaLSNew<-alpha(vars=c(LS1, LS2, LS3, LS4, LS5, LS6, LS LS8, LS9, LS10), dataFrame=LSNew)
 
+alphaItemsGAR<-alpha(vars=c(GAR1, GAR2, GAR3, GAR4, GAR5, GAR6, GAR7, GAR8), dataFrame=GAR)
+alphaItemsGAR$alpha.if.removed
+
+GARNew<-GAR[,-c(7:11)]
+cacGARNew<-cronbach(GARNew)
+cacGARNew$alpha
+
+head(BAR)
+alphaItemsBAR<-alpha(vars=c(BAR1, BAR2, BAR3, BAR4, BAR5, BAR6), dataFrame=BAR)
+alphaItemsBAR$alpha.if.removed
+
+BARNew<-BAR[,-c(3, 7:9)]
+head(BARNew)
+cacBARNew<-cronbach(BARNew)
+cacBARNew$alpha
+
+alphaItemsRR<-alpha(vars=c(RR1, RR2, RR3, RR4, RR5, RR6, RR7, RR8, RR9, RR10), dataFrame=RR)
+alphaItemsRR$alpha.if.removed
+cacRR
+RRNew<-RR[,-c(3, 7:9)]
+head(RRNew)
+cacRRNew<-cronbach(RRNew)
+cacRRNew$alpha
+
+head(LSNew)
+LSNewOmega<-ci.reliability(data=DSNew)
+LSomega$est
+LSomega$ci.lower
+LSomega$ci.upper

@@ -120,7 +120,8 @@ print(c("BAR: Sample size"))
 length(BAR$BAR1)
 ```
 
- Question 1: Use computer sofware to caculate Cronbach's alpha for each of the five scales. 
+### Question 1
+  Use computer sofware to caculate Cronbach's alpha for each of the five scales. 
 
 DS: Cronbach's Alpha
 ```{r, echo=FALSE, message=FALSE}
@@ -142,7 +143,9 @@ cacAlphaTable<-rbind(cacList, cacAlphas)
 print(cacAlphaTable)
 ```
 
-Question 2: Calculate the variance-covariance matricies for each of the five scales. Then calculate the Cronbach's Alpha using the classical definition of the alpha (by hand or with hand calculator). 
+### Question 2
+
+Calculate the variance-covariance matricies for each of the five scales. Then calculate the Cronbach's Alpha using the classical definition of the alpha (by hand or with hand calculator). 
 
 DS:Variance-Covariance Matrix
 ```{r, echo=FALSE, message=FALSE}
@@ -239,11 +242,15 @@ cacBARhand<-(6/5)*(1-(sumVarBARitems/as.numeric(var(BAR$BARC))))
 print(c(cacBARhand, cacBAR$alpha))
 ```
 
-Question 3: Are the alpha values identical between #1 and #2?
+### Question 3
+
+Are the alpha values identical between #1 and #2?
 Above, I have printed out the alpha coefficients that I calculated piece-by-piece, alongside those returned by r, to demonstrate their similarity.
 The two estimates tend to diverge around the fourth decimal place, which I am comfortable calling rounding error. 
 
-Question 4: Calculate split-half reliability analyses for each of the five scales. Appy the Spearman-Brown prophecy formula to estimate internal consistency of the scale. Did the split-half reliability estimate yield the same value as alpha? Why?
+### Question 4
+
+Calculate split-half reliability analyses for each of the five scales. Appy the Spearman-Brown prophecy formula to estimate internal consistency of the scale. Did the split-half reliability estimate yield the same value as alpha? Why?
 
 Across all scales, the predicted reliability exceeded the alpha coefficient. The alpha coefficient is based on the true score equivalence model, such that the covariances between all pairs of items are equal. The fact that the alpha coefficeints are so much lower than the reliability predicted by the Spearman-Brown formula suggets a violation of the equivalence of the item covariances. While an alpha coefficient is not exactly a metric of whether there is a single factor involed, a lack of internal consistency can be a symptom of multiple factors underlying the items, such that items do not load equally on the multiple factors. 
 
@@ -289,7 +296,9 @@ BARhalf
 spearman.brown(r.xx=as.numeric(BARhalf), 2, "n")
 ```
 
-Question 5: Using the single factor model, conduct the tests of homogeneity for each scale. Interpret the results. Test whether the items are essentially tau-equivalent for each of the five scales. Also, test whether the items are parallel for each of the five scales. 
+### Question 5
+
+Using the single factor model, conduct the tests of homogeneity for each scale. Interpret the results. Test whether the items are essentially tau-equivalent for each of the five scales. Also, test whether the items are parallel for each of the five scales. 
 
 Across every scale, a test statistic of homeogeneity reaches extremely small p-values. This gives further support to our suspicion fom question 4 that we must reject the hypothsis of single factor homogeneity. 
 
@@ -310,7 +319,9 @@ factanal(BAR[,1:6], factors=1)
 
 ```
 
-Question 6: Calculate McDonald's omega for each of the five scales. Also calculate 95% CI for the omega estimates.
+### Question 6
+
+Calculate McDonald's omega for each of the five scales. Also calculate 95% CI for the omega estimates.
 
 DS: Omega, lower estimate, upper estimate
 ```{r, message=FALSE, echo=FALSE}
@@ -347,12 +358,70 @@ OmegaBARVector<-cbind(BARomega$est, BARomega$ci.lower, BARomega$ci.upper)
 print(OmegaBARVector)
 ```
 
-Question 7: 
+###Question 7: 
 
-     If the intent is to make the scales shorter, while still maintaining a reliability of 0.7 or greater, every scale is a candidate for shortening except for the Reason-Retired Scale. 
+  If the intent is to make the scales shorter, while still maintaining a reliability of 0.7 or greater, every scale is a candidate for shortening except for the Reason-Retired Scale. 
      
-     The Depression Scale can 
+  The following table shows the overall alpha if an item was removed, and the correlation of each item with the rest of the items. We can see that the Depression Scale has a high reliability to start with. Items 6, 9, 11, and 14, have the highest "alpha-if-removed" values, and the lowest correlations with the other items. If we were to remove the items 6, 9, 11, and 14, the Depression scale would be still have an alpha of 0.85. And since alpha tends to be the lower-bound of the reliability, this suggests that it is safe to remove these four variables.
+    Since the alpha chronically underestimates reliability and is based on assumptions that we've come to question, I have also calculated the Omega for this reduced DS scale, to corroborate its reliability. 
 ```{r, message=FALSE, echo=FALSE}
 alphaBestDS<-epicalc::alpha(vars=c(DS1, DS2, DS3, DS4, DS5, DS6, DS7, DS8, DS9, DS10, DS11, DS12, DS13, DS14), dataFrame=DS)
 print(alphaBestDS$alpha.if.removed)
+
+DSNew<-DS[,-c(6, 9, 11, 14, 15,16, 17)]
+cacDSNew<-cronbach(DSNew)
+c("Alpha of DS without items 6, 9, 11, and 14", cacDSNew$alpha)
+
+DSNewOmega<-ci.reliability(data=DSNew)
+c("Omega of DS without items 6, 9, 11, and 14", DSNewOmega$est)
+
+```
+
+  The life satisfaction scale is of fairly low reliability to start off with, but as seen in the table below, has a few items that have very low correlations with other items, and the overall alpha will remain largely unchanged. By getting rid of items 2,6, and 7, we can increase leave the alpha and omega relatively unchanged. This will give more leeway if more items need to be removed later. 
+```{r, message=FALSE, echo=FALSE}
+alphaBestLS<-epicalc::alpha(vars=c(LS1, LS2, LS3, LS4, LS5, LS6, LS7, LS8, LS9, LS10), dataFrame=LS)
+alphaBestLS$alpha.if.removed
+
+LSNew<-LS[,c(1, 3:5, 8:11)]
+cacLSNew<-cronbach(LSNew)
+c("Alpha of LS without items 2, 6, and 7:", cacLSNew$alpha)
+
+LSNewOmega<-ci.reliability(data=LSNew)
+c("Omega of LS without items 2, 6, and 7", LSNewOmega$est)
+
+```
+
+ 
+ The Good-About-Retirement Scale has an alpha that is not too far from our stated minimum of 0.7. Removing the items with the two lowest correlations with the other variables will still leave us with an acceptable alpha and omega.  
+```{r, message=FALSE, echo=FALSE}
+alphaItemsGAR<-epicalc::alpha(vars=c(GAR1, GAR2, GAR3, GAR4, GAR5, GAR6, GAR7, GAR8), dataFrame=GAR)
+alphaItemsGAR$alpha.if.removed
+
+GARNew<-GAR[,-c(7:11)]
+cacGARNew<-cronbach(GARNew)
+c("Alpha of GAR without items 7, and 8:", cacLSNew$alpha)
+
+GARNewOmega<-ci.reliability(data=GARNew)
+c("Omega of GAR without items 7 and 8:", GARNewOmega$est)
+
+
+```
+
+  The Bad-About-Retirement scale has an alpha around our stated cut off. There is only a single item that would not drop the alpha to our minimum acceptable value. As it has the lowest correlation with the other items, it is probably safe to cut item 3, and this would still leave us with an acceptable alpha and omega. 
+```{r, message=FALSE, echo=FALSE}
+alphaItemsBAR<-epicalc::alpha(vars=c(BAR1, BAR2, BAR3, BAR4, BAR5, BAR6), dataFrame=BAR)
+alphaItemsBAR$alpha.if.removed
+
+BARNew<-BAR[,-c(3, 7:9)]
+cacBARNew<-cronbach(BARNew)
+c("Alpha of BAR without item 3:", cacBARNew$alpha)
+
+BARNewOmega<-ci.reliability(data=BARNew)
+c("Omega of BAR without item 3:", BARNewOmega$est)
+```
+
+  The Reason-Retired scale is the only scale for which we should add items, because every single item on this scale demonstrates extremely poor correlation with the other items, and the overall alpha and omega falls below our minimum. Here, I would recommend removing every item and starting over. 
+```{r, message=FALSE, echo=FALSE}
+alphaItemsRR<-epicalc::alpha(vars=c(RR1, RR2, RR3, RR4, RR5, RR6, RR7, RR8, RR9, RR10), dataFrame=RR)
+alphaItemsRR$alpha.if.removed
 ```
