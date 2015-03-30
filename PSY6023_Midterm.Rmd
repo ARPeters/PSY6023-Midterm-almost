@@ -1,0 +1,351 @@
+---
+title: "AR_Peters_Midterm"
+output: html_document
+---
+```{r, echo=FALSE, message=FALSE}
+library(foreign)
+library(psych)
+library(psy)
+library(stats)
+library(psych)
+library(CTT)
+library(sem)
+library(GPArotation)
+library(MBESS)
+library(lavaan)
+
+```
+
+The first order of business is the reading in and formatting of the data. Subject Responses were divided into separate tables according to scale. 
+Then, to correct for missing and nonsensical responses, I deleted all subjects for whom I did not have a complete survey. This would likely have dramatically reduced the size of the data set had performed listwise deletion across all scales as a whole. However, as the subject of interest is the reliability of each individual scale, performing listwise deletion within individual scales seemed a reasonable way clean up the dataset while removing as little data as possible. 
+The first few rows, and total sample size, of each scale is shown below:
+```{r, echo=FALSE, message=FALSE}
+ds<-read.csv("Midterm.csv")
+
+namevector<-c(
+  "DS1", "DS2", "DS3", "DS4", "DS5", "DS6", "DS7", "DS8", "DS9", "DS10", "DS11", "DS12", "DS13", "DS14", 
+  "LS1", "LS2", "LS3", "LS4", "LS5", "LS6", "LS7", "LS8", "LS9", "LS10", 
+  "RR1", "RR2", "RR3", "RR4", "RR5", "RR6", "RR7", "RR8", "RR9", "RR10", 
+  "GAR1", "GAR2", "GAR3", "GAR4", "GAR5", "GAR6", "GAR7", "GAR8", 
+  "BAR1", "BAR2", "BAR3", "BAR4", "BAR5", "BAR6",
+  "Sex", "Age")
+
+colnames(ds)<-namevector
+
+ds$DS4<- ifelse(ds$DS4==1, 4,
+                ifelse(ds$DS4==2, 3,
+                       ifelse(ds$DS4==3, 2, 1)))
+
+ds$DS7<- ifelse(ds$DS7==1, 4,
+                ifelse(ds$DS7==2, 3,
+                       ifelse(ds$DS7==3, 2, 1)))
+
+ds$DS12<- ifelse(ds$DS12==1, 4,
+                ifelse(ds$DS12==2, 3,
+                       ifelse(ds$DS12==3, 2, 1)))
+
+ds$DS14<- ifelse(ds$DS14==1, 4,
+                ifelse(ds$DS14==2, 3,
+                       ifelse(ds$DS14==3, 2, 1)))
+
+
+DS<-ds[,c(1:14, 49, 50)]
+LS<-ds[,c(15:24, 49, 50)]
+RR<-ds[,c(25:34, 49,50)]
+GAR<-ds[,c(35:42, 49,50)]
+BAR<-ds[,c(43:50)]
+
+for(i in 1:length(DS$DS1)){
+  for(j in 1:14){
+   DS[i,j]<-ifelse(DS[i,j] > 4, NA, DS[i,j])
+  }
+}
+DS<-DS[complete.cases(DS),]
+print(c("Depression Scale"))
+head(DS)
+
+print(c("DS: Sample Size"))
+length(DS$DS1)
+
+for(i in 1:length(LS$LS1)){
+  for(j in 1:10){
+    LS[i,j]<-ifelse(LS[i,j] > 5 || LS[i,j]<0, NA, LS[i,j])
+  }
+}
+
+LS<-LS[complete.cases(LS),]
+print(c("Life Satisfaction Scale"))
+head(LS)
+
+print(c("LS: Sample size"))
+length(LS$LS1)
+
+for(i in 1:length(RR$RR1)){
+  for(j in 1:10){
+    RR[i,j]<-ifelse(RR[i,j] > 4 || RR[i,j]<0, NA, RR[i,j])
+  }
+}
+
+RR<-RR[complete.cases(RR),]
+print(c("Reason for Retirement Scale"))
+head(RR)
+
+print(c("RR: Sample size"))
+length(RR$RR1)
+
+for(i in 1:length(GAR$GAR1)){
+  for(j in 1:8){
+    GAR[i,j]<-ifelse(GAR[i,j] > 4 || GAR[i,j]<0, NA, GAR[i,j])
+  }
+}
+
+GAR<-GAR[complete.cases(GAR),]
+print(c("Good things About Retirement scale"))
+head(GAR)
+
+print(c("GAR: Sample Size"))
+length(GAR$GAR1)
+
+for(i in 1:length(BAR$BAR1)){
+  for(j in 1:6){
+    BAR[i,j]<-ifelse(BAR[i,j] > 4 || BAR[i,j]<0, NA, BAR[i,j])
+  }
+}
+
+BAR<-BAR[complete.cases(BAR),]
+print(c("Bad things About Retirement Scale"))
+head(BAR)
+
+print(c("BAR: Sample size"))
+length(BAR$BAR1)
+```
+
+ Question 1: Use computer sofware to caculate Cronbach's alpha for each of the five scales. 
+
+DS: Cronbach's Alpha
+```{r, echo=FALSE, message=FALSE}
+cacDS<-cronbach(DS[,1:14])
+
+cacLS<-cronbach(LS[,1:10])
+
+cacRR<-cronbach(RR[,1:10])
+
+cacGAR<-cronbach(GAR[,1:8])
+
+cacBAR<-cronbach(BAR[,1:6])
+
+cacList<-c("DS", "LS", "RR", "GAR", "BAR")
+cacAlphas<-c(cacDS$alpha, cacLS$alpha, cacRR$alpha, cacGAR$alpha, cacBAR$alpha)
+cacAlphas<-round(as.numeric(cacAlphas), 2)
+
+cacAlphaTable<-rbind(cacList, cacAlphas)
+print(cacAlphaTable)
+```
+
+Question 2: Calculate the variance-covariance matricies for each of the five scales. Then calculate the Cronbach's Alpha using the classical definition of the alpha (by hand or with hand calculator). 
+
+DS:Variance-Covariance Matrix
+```{r, echo=FALSE, message=FALSE}
+covDS<-cov(DS[,1:14])
+covDS<-round(covDS, 3)
+covDS
+```
+
+DS: Cronbach's Alpha, step by step
+```{r}
+for(i in 1:length(DS$DS1)){
+  DS$DSTotal[i]=sum(DS[i,1:14])
+}
+
+sumVarDSItems<-sum(.317, .655, .661, .581, .277, .2, .512, .294, .149, .485, .338, .863, .503, .897)
+
+cacDShand<-(14/13)*(1-(sumVarDSItems/as.numeric(var(DS$DSTotal))))
+print(c(cacDShand, cacDS$alpha))
+```
+
+LS: Variance-Covariance Matrix
+```{r, echo=FALSE, message=FALSE}
+covLS<-cov(LS[,1:10])
+covLS<-round(covLS, 2)
+covLS
+```
+
+LS: Cronbach's Alpha, step by step
+```{r}
+for(i in 1:length(LS$LS1)){
+  LS$LSTotal[i]=sum(as.numeric(LS[i,1:10]))
+}
+
+sumVarLSitems<-sum(.729, .875, 1.273, 1.27, .485, .427, .229, .499, .587, .508)
+
+cacLShand<-(10/9)*(1-(sumVarLSitems/as.numeric(var(LS$LSTotal))))
+print(c(cacLShand, cacLS$alpha))
+```
+
+RR:Variance-Covariance Matrix
+```{r, echo=FALSE, message=FALSE}
+covRR<-cov(RR[,1:10])
+covRR<-round(covRR, 2)
+covRR
+```
+
+RR: Cronbach's Alpha, step by step
+```{r}
+for(i in 1:length(RR$RR1)){
+  RR$RRTotal[i]=sum(RR[i,1:10])
+}
+
+sumVarRRitems<-sum(1.623, .724, 1.537, .695, .529, 1.081, .365, .591, .818, .573)
+
+cacRRhand<-(10/9)*(1-(sumVarRRitems/as.numeric(var(RR$RRTotal))))
+print(c(cacRRhand, cacRR$alpha))
+```
+
+GAR: Variance-Covariance Matrix
+```{r, echo=FALSE, message=FALSE}
+covGAR<-cov(GAR[,1:8])
+covGAR<-round(covGAR, 2)
+covGAR
+```
+
+GAR: Cronbach's Alpha, step by step
+```{r}
+for(i in 1:length(GAR$GAR1)){
+  GAR$GARC[i]=sum(GAR[i,1:8])
+}
+
+sumVarGARitems<-sum(1.311, 1.531, 1.119, .937, 1.473, 1.337, 1.239, 1.239, 1.372)
+
+cacGARhand<-(8/7)*(1-(sumVarGARitems/as.numeric(var(GAR$GARC))))
+print(c(cacGARhand, cacGAR$alpha))
+```
+
+BAR:Variance-Covariance Matrix
+```{r, echo=FALSE, message=FALSE}
+covBAR<-cov(BAR[,1:6])
+covBAR<-round(covBAR, 2)
+covBAR
+```
+
+BAR: Cronbach's Alpha, step by step
+```{r}
+for(i in 1:length(BAR$BAR1)){
+  BAR$BARC[i]=sum(BAR[i,1:6])
+}
+
+sumVarBARitems<-sum(.861, 1.003, 1.059, 1.329, 1.181, 1.338)
+
+cacBARhand<-(6/5)*(1-(sumVarBARitems/as.numeric(var(BAR$BARC))))
+print(c(cacBARhand, cacBAR$alpha))
+```
+
+Question 3: Are the alpha values identical between #1 and #2?
+Above, I have printed out the alpha coefficients that I calculated piece-by-piece, alongside those returned by r, to demonstrate their similarity.
+The two estimates tend to diverge around the fourth decimal place, which I am comfortable calling rounding error. 
+
+Question 4: Calculate split-half reliability analyses for each of the five scales. Appy the Spearman-Brown prophecy formula to estimate internal consistency of the scale. Did the split-half reliability estimate yield the same value as alpha? Why?
+
+Across all scales, the predicted reliability exceeded the alpha coefficient. The alpha coefficient is based on the true score equivalence model, such that the covariances between all pairs of items are equal. The fact that the alpha coefficeints are so much lower than the reliability predicted by the Spearman-Brown formula suggets a violation of the equivalence of the item covariances. While an alpha coefficient is not exactly a metric of whether there is a single factor involed, a lack of internal consistency can be a symptom of multiple factors underlying the items, such that items do not load equally on the multiple factors. 
+
+The differences between obsered and prophesied reliability in this case suggets that some items with each of these scales do not increase the reliability the way they would if they had similar factor loadings. 
+
+DS: Split-half reliability and predicted reliability
+```{r, message=FALSE, echo=FALSE}
+DShalf<-splitHalf(DS)
+DShalf<-DShalf$meanr
+DShalf
+print(spearman.brown(r.xx=as.numeric(DShalf), 2, "n"))
+```
+
+LS: Split-half reliability and predicted reliability
+```{r, message=FALSE, echo=FALSE}
+LShalf<-splitHalf(LS)
+LShalf<-LShalf$meanr
+LShalf
+spearman.brown(r.xx=as.numeric(LShalf), 2, "n")
+```
+
+RR: Split-half reliability and predicted reliability
+```{r, message=FALSE, echo=FALSE}
+RRhalf<-splitHalf(RR)
+RRhalf<-RRhalf$meanr
+RRhalf
+spearman.brown(r.xx=as.numeric(RRhalf), 2, "n")
+```
+
+GAR: Split-half reliability and predicted reliability
+```{r, message=FALSE, echo=FALSE}
+GARhalf<-splitHalf(GAR)
+GARhalf<-GARhalf$meanr
+GARhalf
+spearman.brown(r.xx=as.numeric(GARhalf), 2, "n")
+```
+
+BAR: Split-half reliability and predicted reliability
+```{r, message=FALSE, echo=FALSE}
+BARhalf<-splitHalf(BAR)
+BARhalf<-BARhalf$meanr
+BARhalf
+spearman.brown(r.xx=as.numeric(BARhalf), 2, "n")
+```
+
+Question 5: Using the single factor model, conduct the tests of homogeneity for each scale. Interpret the results. Test whether the items are essentially tau-equivalent for each of the five scales. Also, test whether the items are parallel for each of the five scales. 
+
+Across every scale, a test statistic of homeogeneity reaches extremely small p-values. This gives further support to our suspicion fom question 4 that we must reject the hypothsis of single factor homogeneity. 
+
+In each case, we also have evidence against parallel items. For all five scales, we observe factor loadings that are not equal; indeed, they are not even similar enough to maintain the null hypothesis of a single factor. 
+
+Moreover, they are not even essentially tau-equivalent. The covariances are highly disparate, such that we do not have reason to make the assumption of equal inter-item covariances necessary for a single-factor model. 
+```{r, echo=FALSE, message=FALSE}
+
+factanal(DS[,1:14], factors=1)
+
+factanal(LS[,1:10], factors=1)
+
+factanal(RR[,1:10], factors=1)
+
+factanal(GAR[,1:8], factors=1)
+
+factanal(BAR[,1:6], factors=1)
+
+```
+
+Question 6: Calculate McDonald's omega for each of the five scales. Also calculate 95% CI for the omega estimates.
+
+DS: Omega, lower estimate, upper estimate
+```{r, message=FALSE, echo=FALSE}
+DSomega<-ci.reliability(data=DS[,1:14])
+OmegaDSVector<-cbind(DSomega$est, DSomega$ci.lower, DSomega$ci.upper)
+print(OmegaDSVector)
+```
+
+LS: Omega, lower estimate, upper estimate
+```{r, message=FALSE, echo=FALSE}
+LSomega<-ci.reliability(data=LS[,1:10])
+OmegaLSVector<-cbind(LSomega$est, LSomega$ci.lower, LSomega$ci.upper)
+print(OmegaLSVector)
+```
+
+RR: Omega, lower estimate, upper estimate
+```{r, message=FALSE, echo=FALSE}
+RRomega<-ci.reliability(data=RR[,1:10])
+OmegaRRVector<-cbind(RRomega$est, RRomega$ci.lower, RRomega$ci.upper)
+print(OmegaRRVector)
+```
+
+GAR: Omega, lower estimate, upper estimate
+```{r, message=FALSE, echo=FALSE}
+GARomega<-ci.reliability(data=GAR[,1:8])
+OmegaGARVector<-cbind(GARomega$est, GARomega$ci.lower, GARomega$ci.upper)
+print(OmegaGARVector)
+```
+
+BAR: Omega, lower estimate, upper estimate
+```{r, message=FALSE, echo=FALSE}
+BARomega<-ci.reliability(data=BAR[,1:6])
+OmegaBARVector<-cbind(BARomega$est, BARomega$ci.lower, BARomega$ci.upper)
+print(OmegaBARVector)
+```
+
+Question 7: 
+
